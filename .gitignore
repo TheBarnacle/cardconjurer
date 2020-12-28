@@ -6,3 +6,7 @@ data/borders/m15/.DS_Store
 gallery/buildImageList.bat
 gallery/buildImageList.py
 debug.log
+CORS.json
+CORSGCS.bat
+syncGCS.bat
+headersGCS.bat
