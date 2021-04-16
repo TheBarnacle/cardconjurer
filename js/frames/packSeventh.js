@@ -1,5 +1,6 @@
 //Create objects for common properties across available frames
 var masks = [{src:'/img/frames/seventh/regular/seventhMaskPinline.png', name:'Pinline'}, {src:'/img/frames/seventh/regular/seventhMaskRules.png', name:'Rules'}, {src:'/img/frames/seventh/regular/seventhMaskFrame.png', name:'Frame'}, {src:'/img/frames/seventh/regular/seventhMaskBorder.png', name:'Border'}];
+var borderMask = [{src:'/img/frames/seventh/regular/seventhMaskBorder.png', name:'Border'}]
 var bounds = {x:0.7573, y:0.8848, width:0.188, height:0.0733};
 //defines available frames
 availableFrames = [
@@ -16,7 +17,10 @@ availableFrames = [
 	{name:'Black Land Frame', src:'/img/frames/seventh/regular/seventhFrameBL.png', masks:masks},
 	{name:'Red Land Frame', src:'/img/frames/seventh/regular/seventhFrameRL.png', masks:masks},
 	{name:'Green Land Frame', src:'/img/frames/seventh/regular/seventhFrameGL.png', masks:masks},
-	{name:'DCI Star', src:'/img/frames/seventh/seventhFoilStamp.png', bounds:{x:0.1089, y:0.8345, width:0.4033, height:0.1107}}
+	{name:'DCI Star', src:'/img/frames/seventh/seventhFoilStamp.png', bounds:{x:0.1089, y:0.8345, width:0.4033, height:0.1107}},
+	{name:'White Border', src:'/img/frames/white.png', masks:borderMask, noDefaultMask:true},
+	{name:'Silver Border', src:'/img/frames/silver.png', masks:borderMask, noDefaultMask:true},
+	{name:'Gold Border', src:'/img/frames/gold.png', masks:borderMask, noDefaultMask:true}
 ];
 //disables/enables the "Load Frame Version" button
 document.querySelector('#loadFrameVersion').disabled = false;
@@ -45,9 +49,9 @@ document.querySelector('#loadFrameVersion').onclick = async function() {
 	});
 	//bottom info
 	loadBottomInfo({
-		top: {text:'Illus: {elemidinfo-artist}', x:0.0614, y:0.8915, width:0.8774, height:0.0281, oneLine:true, size:0.0281, align:'center', shadowX:0.0027, shadowY:0.002, color:'white'},
-		wizards: {name:'wizards', text:'\u2122 & \u00a9 ' + date.getFullYear() + ' Wizards of the Coast', x:0.0614, y:0.921, width:0.8774, height:0.0172, oneLine:true, size:0.0172, align:'center', shadowX:0.0027, shadowY:0.002, color:'white'},
-		bottom: {text:'NOT FOR SALE   CardConjurer.com', x:0.0614, y:0.94, width:0.8774, height:0.0143, oneLine:true, size:0.0143, align:'center', shadowX:0.0027, shadowY:0.002, color:'white'}
+		top: {text:'Illus: {elemidinfo-artist}', x:0.0614, y:1883/2100, width:0.8774, height:0.0281, oneLine:true, size:0.0281, align:'center', shadowX:0.0027, shadowY:0.002, color:'white'},
+		wizards: {name:'wizards', text:'\u2122 & \u00a9 ' + date.getFullYear() + ' Wizards of the Coast', x:0.0614, y:1942/2100, width:0.8774, height:0.0172, oneLine:true, size:0.0172, align:'center', shadowX:0.0027, shadowY:0.002, color:'white'},
+		bottom: {text:'NOT FOR SALE   CardConjurer.com', x:0.0614, y:1980/2100, width:0.8774, height:26/2100, oneLine:true, size:26/2100, align:'center', shadowX:0.0027, shadowY:0.002, color:'white'}
 	});
 }
 //loads available frames

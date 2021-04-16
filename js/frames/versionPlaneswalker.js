@@ -53,17 +53,23 @@ if (!loadedVersions.includes('/js/frames/versionPlaneswalker.js')) {
 	planeswalkerTextMask.src = '/img/frames/planeswalker/planeswalkerMaskText.png';
 	var lightColor = 'white';
 	var darkColor = '#a4a4a4';
+} else {
+	planeswalkerEdited();
 }
 
 function planeswalkerEdited() {
 	var planeswalkerTall = 0;
 	if (card.version == 'planeswalkerTall') {
 		planeswalkerTall = 1;
-		if (!planeswalkerTextMask.src.includes('Tall')) {
+		if (!planeswalkerTextMask.src.includes('tall')) {
 			planeswalkerTextMask.src = '/img/frames/planeswalker/tall/planeswalkerTallMaskRules.png';
 		}
+	} else if (card.version == 'planeswalkerMDFC') {
+		if (!planeswalkerTextMask.src.includes('mdfc')) {
+			planeswalkerTextMask.src = '/img/frames/planeswalker/mdfc/text.svg';
+		}
 	} else {
-		if (planeswalkerTextMask.src.includes('Tall')) {
+		if (planeswalkerTextMask.src.includes('tall') || planeswalkerTextMask.src.includes('mdfc')) {
 			planeswalkerTextMask.src = '/img/frames/planeswalker/planeswalkerMaskText.png';
 		}
 	}

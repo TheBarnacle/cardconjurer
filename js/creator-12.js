@@ -58,9 +58,10 @@ async function resetCardIrregularities({canvas = [1500, 2100, 0, 0], resetOthers
 	card.margins = false;
 	//rotation
 	if (card.landscape) {
-		previewContext.scale(5/7, 7/5);
-		previewContext.rotate(Math.PI / 2);
-		previewContext.translate(0, -card.width / 2);
+		// previewContext.scale(card.width/card.height, card.height/card.width);
+		// previewContext.rotate(Math.PI / 2);
+		// previewContext.translate(0, -card.width / 2);
+		previewContext.setTransform(1, 0, 0, 1, 0, 0);
 		card.landscape = false;
 	}
 	//card size
@@ -215,10 +216,11 @@ function toggleCollapse(event) {
 }
 //Mana Symbols
 var manaSymbols = [];
-loadManaSymbols(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', 'w', 'u', 'b', 'r', 'g', 'c', 'x', 'y', 'z', 't', 'untap', 'e', 's', 'chaos']);
+loadManaSymbols(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', 'w', 'u', 'b', 'r', 'g', 'c', 'x', 'y', 'z', 't', 'untap', 'e', 's']);
 loadManaSymbols(['wu', 'wb', 'ub', 'ur', 'br', 'bg', 'rg', 'rw', 'gw', 'gu', '2w', '2u', '2b', '2r', '2g', 'wp', 'up', 'bp', 'rp', 'gp'], [1.2, 1.2]);
 loadManaSymbols(['bar.png', 'whitebar.png']);
-loadManaSymbols(['chaos'], [1, 10.2]);
+loadManaSymbols(['chaos'], [1.2, 1]);
+loadManaSymbols(['planeswalker'], [0.6, 1.2]);
 function loadManaSymbols(manaSymbolPaths, size = [1, 1]) {
 	manaSymbolPaths.forEach(item => {
 		var manaSymbol = {};
@@ -473,9 +475,15 @@ function uploadFrameOption(imageSource) {
 }
 //TEXT TAB
 var writingText;
-function loadTextOptions(textObject) {
+function loadTextOptions(textObject, replace=true) {
 	var oldCardText = card.text || {};
-	card.text = textObject;
+	if (replace) {
+		card.text = textObject;
+	} else {
+		Object.keys(textObject).forEach(key => {
+			card.text[key] = textObject[key];
+		});
+	}
 	document.querySelector('#text-options').innerHTML = null;
 	Object.entries(card.text).forEach(item => {
 		if (oldCardText[item[0]]) {
@@ -508,7 +516,7 @@ function textboxEditor() {
 	document.querySelector('#textbox-editor-height').onchange = (event) => {selectedTextbox.height = (event.target.value / card.height); textEdited();}
 }
 function textEdited() {
-	card.text[Object.keys(card.text)[selectedTextIndex]].text = document.querySelector('#text-editor').value;
+	card.text[Object.keys(card.text)[selectedTextIndex]].text = curlyQuotes(document.querySelector('#text-editor').value);
 	drawTextBuffer();
 }
 function drawTextBuffer() {
@@ -569,6 +577,7 @@ function writeText(textObject, targetContext) {
 		var textShadowOffsetY = scaleHeight(textObject.shadowY) || 0;
 		var textShadowBlur = scaleHeight(textObject.shadowBlur) || 0;
 		var textArcRadius = scaleHeight(textObject.arcRadius) || 0;
+		var manaSymbolColor = textObject.manaSymbolColor || null;
 		if (textArcRadius > 0) {
 			//Buffers the canvases accordingly
 			var canvasMargin = 300 + textArcRadius;
@@ -715,7 +724,7 @@ function writeText(textObject, targetContext) {
 						currentX = savedTextXPosition;
 					}
 				} else if (possibleCode.includes('ptshift')) {
-					if (card.frames.findIndex(element => element.name.toLowerCase().includes('power/toughness')) >= 0 || card.version.includes('planeswalker') || card.version == 'commanderLegends' || card.version == 'm21') {
+					if (card.frames.findIndex(element => element.name.toLowerCase().includes('power/toughness')) >= 0 || card.version.includes('planeswalker') || ['commanderLegends', 'm21', 'mysticalArchive'].includes(card.version)) {
 						ptShift[0] = scaleWidth(parseFloat(possibleCode.replace('ptshift', '').split(',')[0]));
 						ptShift[1] = scaleHeight(parseFloat(possibleCode.split(',')[1]));
 					}
@@ -725,6 +734,8 @@ function writeText(textObject, targetContext) {
 					textArcRadius = parseInt(possibleCode.replace('arcradius', '')) || 0;
 				} else if (possibleCode.includes('arcstart')) {
 					textArcStart = parseFloat(possibleCode.replace('arcstart', '')) || 0;
+				} else if (possibleCode.includes('manacolor')) {
+					manaSymbolColor = possibleCode.replace('manacolor', '') || 'white';
 				} else if (possibleCode.includes('fixtextalign')) {
 					textAlign = realTextAlign;
 				} else if (findManaSymbolIndex(possibleCode.replace('/', '')) > -1 || findManaSymbolIndex(possibleCode.replace('/', '').split('').reverse().join('')) > -1) {
@@ -784,6 +795,8 @@ function writeText(textObject, targetContext) {
 							fakeShadowContext.drawImageArc(backImage, manaSymbolX, manaSymbolY, manaSymbolWidth, manaSymbolHeight, textArcRadius, textArcStart, currentX);
 						}
 						fakeShadowContext.drawImageArc(manaSymbol.image, manaSymbolX, manaSymbolY, manaSymbolWidth, manaSymbolHeight, textArcRadius, textArcStart, currentX);
+					} else if (manaSymbolColor) {
+						fakeShadowContext.fillImage(manaSymbol.image, manaSymbolX, manaSymbolY, manaSymbolWidth, manaSymbolHeight, manaSymbolColor);
 					} else {
 						if (manaSymbol.backs) {
 							fakeShadowContext.drawImage(backImage, manaSymbolX, manaSymbolY, manaSymbolWidth, manaSymbolHeight);
@@ -869,8 +882,37 @@ CanvasRenderingContext2D.prototype.drawImageArc = function(image, x, y, width, h
 	this.drawImage(image, 0, -radius, width, height);
 	this.restore();
 }
+CanvasRenderingContext2D.prototype.fillImage = function(image, x, y, width, height, color = 'white', margin = 10) {
+	var canvas = document.createElement('canvas');
+	canvas.width = width + margin * 2;
+	canvas.height = height + margin * 2;
+	var context = canvas.getContext('2d');
+	context.drawImage(image, margin, margin, width, height);
+	context.globalCompositeOperation = 'source-in';
+	context.fillStyle = pinlineColors(color);
+	context.fillRect(0, 0, width + margin * 2, height + margin * 2);
+	this.drawImage(canvas, x - margin, y - margin, width + margin * 2, height + margin * 2);
+}
 function widthToAngle(width, radius) {
 	return width / radius;
+}
+function curlyQuotes(input) {
+	return input.replace(/ '/g, ' ‘').replace(/^'/, '‘').replace(/' /g, '’ ').replace(/'$/, '’').replace(/ "/g, ' “').replace(/^"/, '“').replace(/" /g, '” ').replace(/\."/, '”').replace(/"$/, '”');
+}
+function pinlineColors(color) {
+	return color.replace('white', '#fcfeff').replace('blue', '#0075be').replace('black', '#272624').replace('red', '#ef3827').replace('green', '#007b43')
+}
+async function addTextbox(textboxType) {
+	if (textboxType == 'Nickname' && !card.text.nickname && card.text.title) {
+		await loadTextOptions({nickname: {name:'Nickname', text:card.text.title.text, x:0.14, y:0.1129, width:0.72, height:0.0243, oneLine:true, font:'mplantini', size:0.0229, color:'white', shadowX:0.0014, shadowY:0.001, align:'center'}}, false);
+		var nickname = card.text.title;
+		nickname.name = 'Nickname';
+		card.text.title = card.text.nickname;
+		card.text.title.name = 'Title';
+		card.text.nickname = nickname;
+	} else if (textboxType == 'Power/Toughness' && !card.text.pt) {
+		loadTextOptions({pt: {name:'Power/Toughness', text:'', x:0.7928, y:0.902, width:0.1367, height:0.0372, size:0.0372, font:'belerenbsc', oneLine:true, align:'center'}}, false);
+	}
 }
 //ART TAB
 function uploadArt(imageSource, otherParams) {
@@ -955,8 +997,8 @@ function resetSetSymbol() {
 function fetchSetSymbol() {
 	var setCode = document.querySelector('#set-symbol-code').value.toLowerCase() || 'cmd';
 	var setRarity = document.querySelector('#set-symbol-rarity').value.toLowerCase() || 'c';
-	if (setCode == 'cc') {
-		uploadSetSymbol('/img/setSymbols/cc-' + setRarity + '.png', 'resetSetSymbol');
+	if (['cc', 'logan', 'joe'].includes(setCode.toLowerCase())) {
+		uploadSetSymbol(fixUri(`/img/setSymbols/${setCode.toLowerCase()}-${setRarity}.svg`), 'resetSetSymbol');
 	} else {
 		imageURL('http://gatherer.wizards.com/Handlers/Image.ashx?type=symbol&set=' + setCode + '&size=large&rarity=' + setRarity, uploadSetSymbol, 'resetSetSymbol');
 	}
@@ -1065,6 +1107,17 @@ function artistEdited(value) {
 	document.querySelector('#info-artist').value = value;
 	bottomInfoEdited();
 }
+function toggleStarDot() {
+	for (var key of Object.keys(card.bottomInfo)) {
+		var text = card.bottomInfo[key].text
+		if (text.includes('*')) {
+			card.bottomInfo[key].text = text.replace('*', ' \u2022 ');
+		} else {
+			card.bottomInfo[key].text = text.replace(' \u2022 ', '*');
+		}
+	}
+	bottomInfoEdited();
+}
 //DRAWING THE CARD (putting it all together)
 function drawCard() {
 	cardContext.globalCompositeOperation = 'source-over';
@@ -1127,16 +1180,7 @@ function changeCardIndex() {
 	if (card.text.mana) {card.text.mana.text = cardToImport.mana_cost || '';}
 	if (card.text.type) {card.text.type.text = cardToImport.type_line || '';}
 	if (card.text.rules) {
-		var rulesText = (cardToImport.oracle_text || '').replace('(', '{i}(').replace(')', '){/i}');
-		var rulesTextCounter = 1;
-		while (rulesText.includes('"')) {
-			if (rulesTextCounter % 2) {
-				rulesText = rulesText.replace('"', '\u201c');
-			} else {
-				rulesText = rulesText.replace('"', '\u201d');
-			}
-			rulesTextCounter ++;
-		}
+		var rulesText = curlyQuotes((cardToImport.oracle_text || '').replace('(', '{i}(').replace(')', '){/i}'));
 		card.text.rules.text = rulesText;
 		if (cardToImport.flavor_text) {
 			var flavorText = cardToImport.flavor_text;

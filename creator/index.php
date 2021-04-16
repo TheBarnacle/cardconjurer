@@ -90,12 +90,12 @@ include('../globalHTML/header-1.php');
 									<option value='Token-2'>Tokens</option>
 									<option value='Saga-1'>Sagas</option>
 									<option value='Planeswalker'>Planeswalkers</option>
+									<option value='Modal-1'>Modal DFC's</option>
 									<option value='DFC'>Transform</option>
 									<option disabled>Special Frames</option>
 									<option value='Showcase-5'>Showcase Frames</option>
 									<option value='Promo-2'>Promos (Tall Art)</option>
 									<option value='Textless-4'>Textless/Fullart</option>
-									<option value='Modal-1'>Short Modal DFC's</option>
 									<option disabled>Other Frames</option>
 									<option value='Custom'>Custom</option>
 									<option value='Misc-1'>Old/Misc</option>
@@ -154,7 +154,7 @@ include('../globalHTML/header-1.php');
 							<h5 class='margin-bottom padding input-description'>Edit the placement and size of the selected textbox</h5>
 							<button class='input' onclick='textboxEditor();'>Edit Bounds</button>
 						</div>
-						<div class='readable-background padding'>
+						<div class='readable-background padding margin-bottom'>
 							<h5 class='collapsible collapsed padding input-description' onclick='toggleCollapse(event);'>
 								Text Code / Mana Symbol Code Reference
 							</h5>
@@ -194,6 +194,13 @@ include('../globalHTML/header-1.php');
 									<h5>{e}</h5><h5>Energy symbol</h5>
 									<h5>Notes</h5><h5>Hybrid/Phyrexian mana only works with WUBRG</h5>
 								</div>
+							</div>
+						</div>
+						<div class='readable-background padding'>
+							<h5 class='padding input-description'>Add a textbox to your card</h5>
+							<div class='padding input-grid'>
+								<button class='input' onclick='addTextbox("Nickname");'>Nickname</button>
+								<button class='input' onclick='addTextbox("Power/Toughness");'>Power/Toughness</button>
 							</div>
 						</div>
 					</div>
@@ -357,7 +364,7 @@ include('../globalHTML/header-1.php');
 						</div>
 					</div>
 					<div id='creator-menu-bottomInfo' class='hidden'>
-						<div class='readable-background padding'>
+						<div class='readable-background padding margin-bottom'>
 							<h5 class='padding margin-bottom input-description'>Enter the card number, rarity, set code, language, and artist's name</h5>
 							<div class='padding input-grid'>
 								<input id='info-number' type='text' class='input' oninput='bottomInfoEdited();' placeholder='Number'>
@@ -365,6 +372,12 @@ include('../globalHTML/header-1.php');
 								<input id='info-set' type='text' class='input' oninput='bottomInfoEdited();' placeholder='Set' value='MTG'>
 								<input id='info-language' type='text' class='input' oninput='bottomInfoEdited();' placeholder='Language' value='EN'>
 								<input id='info-artist' type='text' class='input' oninput='artistEdited(this.value);' placeholder='Artist'>
+							</div>
+						</div>
+						<div class='readable-background padding'>
+							<h5 class='input-description padding margin-bottom'>Toggle between star (seen on foils) and dot (seen on regular cards)</h5>
+							<div class='padding'>
+								<button class='input padding' onclick='toggleStarDot();'>Toggle Star/Dot</button>
 							</div>
 						</div>
 					</div>
@@ -440,5 +453,5 @@ include('../globalHTML/header-1.php');
 			</h4>
 		</div>
 	</div>
-	<script defer src='/js/creator-9.js'></script>
+	<script defer src='/js/creator-12.js'></script>
 <?php include('../globalHTML/footer.php'); ?>
