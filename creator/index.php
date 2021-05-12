@@ -43,6 +43,13 @@ include('../globalHTML/header-1.php');
 					<span class='checkmark'></span>
 				</label>
 			</div>
+			<div>
+				<h5 class='input-description'>Overlay Mode</h5>
+				<label class='checkbox-container input'>Preserve Alpha
+					<input id='frame-editor-alpha' type='checkbox' placeholder='Preserve Alpha'>
+					<span class='checkmark'></span>
+				</label>
+			</div>
 		</div>
 		<div id='textbox-editor' class='textbox-editor'>
 			<h2 class='textbox-editor-title'>Textbox Editor</h2>
@@ -121,8 +128,12 @@ include('../globalHTML/header-1.php');
 							<div class='input-grid margin-bottom'>
 								<button class='input' onclick='addFrame()'>Add Frame to Card</button>
 								<button class='input' onclick='addFrame([{src:"/img/frames/maskRightHalf.png", name:"Right Half"}])'>Add Frame to Card (Right Half)</button>
-								<button class='input' onclick='addFrame([{src:"/img/frames/maskMiddleThird.png", name:"Middle Third"}])'>Add Frame to Card (Middle Third)</button>
 							</div>
+							<h5 class='collapsible collapsed padding input-description' onclick='toggleCollapse(event);'>More options</h5>
+								<div class='input-grid margin-bottom'>
+									<button class='input' onclick='addFrame([{src:"/img/frames/maskLeftHalf.png", name:"Left Half"}])'>Add Frame to Card (Left Half)</button>
+									<button class='input' onclick='addFrame([{src:"/img/frames/maskMiddleThird.png", name:"Middle Third"}])'>Add Frame to Card (Middle Third)</button>
+								</div>
 							<h5 id='selectedPreview' class='padding input-description'>(Selected: White Frame, No Mask)</h5>
 						</div>
 						<div class='readable-background padding margin-bottom'>
@@ -216,18 +227,17 @@ include('../globalHTML/header-1.php');
 									<input type='url' placeholder='Via URL' class='input' onchange='imageURL(this.value, uploadArt, "autoFit");'>
 								</div>
 							</div>
-							<h5 class='margin-bottom padding input-description'>Or enter a card name (and index)</h5>
-							<div class='input-grid margin-bottom'>
-								<input id='art-name' type='text' placeholder='Enter Card Name' class='input' onchange='fetchScryfallData(this.value, artFromScryfall);'>
-								<input id='art-index' type='number' value=1 max=1 min=1 class='input' onchange='changeArtIndex();'>
-							</div>
+							<h5 class='margin-bottom padding input-description'>Or enter a card name</h5>
+							<input id='art-name' type='text' placeholder='Enter Card Name' class='input margin-bottom' onchange='fetchScryfallData(this.value, artFromScryfall, true);'>
+							<h5 class='padding margin-bottom input-description'>Select a specific card art to load</h5>
+							<select class='input margin-bottom' id='art-index' onchange='changeArtIndex();'></select>
 							<h5 class='margin-bottom padding input-description'>And credit the artist</h5>
 							<div class='input-grid'>
 								<input id='art-artist' type='text' class='input' oninput='artistEdited(this.value);' placeholder='Artist'>
 							</div>
 						</div>
 						<div class='readable-background padding margin-bottom'>
-							<h5 class='margin-bottom padding input-description'>Position/scale your art (X, Y, Scale)</h5>
+							<h5 class='margin-bottom padding input-description'>Position/scale your art (X, Y, Scale)<br>Art is now visually adjustable! Click and drag anywhere on the card to move your art around, and hold shift while doing so to scale your art.</h5>
 							<div class='input-grid margin-bottom'>
 								<input id='art-x' type='number' class='input' oninput='artEdited();' value=0>
 								<input id='art-y' type='number' class='input' oninput='artEdited();' value=0>
@@ -256,8 +266,8 @@ include('../globalHTML/header-1.php');
 							</div>
 							<h5 class='margin-bottom padding input-description'>Or enter a set code/rarity</h5>
 							<div class='input-grid margin-bottom'>
-								<input id='set-symbol-code' type='text' placeholder='Set Code' class='input' oninput='fetchSetSymbol();'>
-								<input id='set-symbol-rarity' type='text' placeholder='Rarity' class='input' oninput='fetchSetSymbol();'>
+								<input id='set-symbol-code' type='text' placeholder='Set Code' class='input' onchange='fetchSetSymbol();'>
+								<input id='set-symbol-rarity' type='text' placeholder='Rarity' class='input' onchange='fetchSetSymbol();'>
 							</div>
 							<h5 class='collapsible collapsed padding input-description' onclick='toggleCollapse(event);'>
 								How to find set codes
@@ -367,27 +377,51 @@ include('../globalHTML/header-1.php');
 						<div class='readable-background padding margin-bottom'>
 							<h5 class='padding margin-bottom input-description'>Enter the card number, rarity, set code, language, and artist's name</h5>
 							<div class='padding input-grid'>
-								<input id='info-number' type='text' class='input' oninput='bottomInfoEdited();' placeholder='Number'>
+								<input id='info-number' type='text' class='input' oninput='bottomInfoEdited();' placeholder='Number' value=''>
 								<input id='info-rarity' type='text' class='input' oninput='bottomInfoEdited();' placeholder='Rarity' value='P'>
 								<input id='info-set' type='text' class='input' oninput='bottomInfoEdited();' placeholder='Set' value='MTG'>
 								<input id='info-language' type='text' class='input' oninput='bottomInfoEdited();' placeholder='Language' value='EN'>
 								<input id='info-artist' type='text' class='input' oninput='artistEdited(this.value);' placeholder='Artist'>
 							</div>
 						</div>
-						<div class='readable-background padding'>
+						<div class='readable-background padding margin-bottom'>
 							<h5 class='input-description padding margin-bottom'>Toggle between star (seen on foils) and dot (seen on regular cards)</h5>
 							<div class='padding'>
 								<button class='input padding' onclick='toggleStarDot();'>Toggle Star/Dot</button>
 							</div>
 						</div>
+						<div class='readable-background padding margin-bottom'>
+							<h5 class='input-description padding margin-bottom'>Save current collector info as default</h5>
+							<div class='padding'>
+								<button class='input padding' onclick='setDefaultCollector();'>Save as Default</button>
+							</div>
+							<h5 class='input-description padding margin-bottom'>Clear your saved default collector info</h5>
+							<div class='padding'>
+								<button class='input padding' onclick='removeDefaultCollector();'>Clear Saved Defaults</button>
+							</div>
+						</div>
 					</div>
 					<div id='creator-menu-import' class='hidden'>
 						<div class='readable-background margin-bottom padding'>
-							<h5 class='padding margin-bottom input-description'>Import a real card by name (and index)</h5>
-							<div class='padding input-grid'>
-								<input class='input' type='text' onchange='fetchScryfallData(this.value, importCard);' placeholder='Enter Card Name'>
-								<input id='import-index' class='input' type='number' onchange='changeCardIndex();' value=1 max=1 min=1>
-							</div>
+							<h5 class='padding margin-bottom input-description'>Import a real card by name</h5>
+							<input id='import-name' class='input margin-bottom' type='text' onchange='fetchScryfallData(this.value, importCard);' placeholder='Enter Card Name'>
+							<h5 class='padding margin-bottom input-description'>Select a specific card to import</h5>
+							<select class='input margin-bottom' id='import-index' onchange='changeCardIndex();'></select>
+							<h5 class='padding input-description'>Select a language for card imports (not all languages will always be available)</h5>
+							<select class='input' id='import-language' onchange='fetchScryfallData(document.querySelector("#import-name").value, importCard);'>
+								<option value="en">English</option>
+								<option value="es">Spanish</option>
+								<option value="fr">French</option>
+								<option value="de">German</option>
+								<option value="it">Italian</option>
+								<option value="pt">Portuguese</option>
+								<option value="ja">Japanese</option>
+								<option value="ko">Korean</option>
+								<option value="ru">Russian</option>
+								<option value="zhs">Simplified Chinese</option>
+								<option value="zht">Traditional Chinese</option>
+								<option value="ph">Phyrexian</option>
+							</select>
 						</div>
 						<div class='readable-background margin-bottom padding'>
 							<h5 class='padding margin-bottom input-description'>Save your current card</h5>
@@ -431,6 +465,10 @@ include('../globalHTML/header-1.php');
 				</div>
 				<div class='readable-background padding'>
 					<h3 class='download padding' onclick='downloadCard();'>Download your card</h3>
+					<h5 class='collapsible collapsed padding input-description debugging hidden' onclick='toggleCollapse(event);'>Not downloading? </h5>
+					<div class='input-grid margin-bottom debugging hidden'>
+						<h4 onclick='downloadCard(true);' id='downloadAlt' href='' target='_blank' class='padding download' style='text-align: left;'>Use this link to open your card image in a new window, then save it manually.</h4>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -453,5 +491,5 @@ include('../globalHTML/header-1.php');
 			</h4>
 		</div>
 	</div>
-	<script defer src='/js/creator-12.js'></script>
+	<script defer src='/js/creator-17.js'></script>
 <?php include('../globalHTML/footer.php'); ?>

@@ -10,11 +10,12 @@ loadFramePacks([
 	{name:'Other Frames', value:'disabled'},
 	{name:'Lands', value:'M15Lands'},
 	{name:'Snow', value:'M15Snow'},
+	{name:'Mutate', value:'M15Mutate'},
 	{name:'Nyx', value:'M15Nyx'},
 	{name:'Devoid', value:'M15Devoid'},
 	{name:'Special', value:'disabled'},
 	{name:'Nickname', value:'M15Nickname'},
-	{name:'Box Toppers', value:'M15BoxTopper'},
+	{name:'Extended Art (Box Topper)', value:'M15BoxTopper'},
 	{name:'Custom Addons', value:'disabled'},
 	{name:'Brawl Legend Crowns', value:'Brawl'}
 ])

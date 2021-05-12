@@ -59,6 +59,22 @@
 	font-family: fritz-quadrata;
 	src: url("/fonts/fritz-quadrata.ttf");
 }
+@font-face {
+	font-family: japanese-title;
+	src: url("/fonts/NudMotoyaExAporo_W6.ttf");
+}
+@font-face {
+	font-family: japanese;
+	src: url('/fonts/2012c863631ba71f874aba70590795a1.otf');
+}
+@font-face {
+	font-family: invocation;
+	src: url('/fonts/invocation.ttf');
+}
+@font-face {
+	font-family: invocation-text;
+	src: url('/fonts/shango-gothic-bold.ttf');
+}
 /*Variables*/
 :root {
 	--site-background: url('/img/lowpolyBackground.svg');

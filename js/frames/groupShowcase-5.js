@@ -1,4 +1,5 @@
 loadFramePacks([
+	{name:'Mystical Archive (Japanese)', value:'MysticalArchiveJP'},
 	{name:'Mystical Archive', value:'MysticalArchive'},
 	{name:'Praetors', value:'Praetors'},
 	{name:'Kaldheim', value:'Kaldheim-2'},
@@ -11,9 +12,10 @@ loadFramePacks([
 	{name:'Generic Showcase', value:'GenericShowcase'},
 	{name:'Masterpieces/Other', value:'disabled'},
 	{name:'Nickname', value:'M15Nickname'},
-	{name:'Box Toppers', value:'M15BoxTopper'},
+	{name:'Extended Art (Box Topper)', value:'M15BoxTopper'},
 	{name:'ZNR Expeditions (2020)', value:'ExpeditionZNR-1'},
 	{name:'Ixalan Maps', value:'Ixalan'},
+	{name:'Amonkhet Invocations (u/Smyris)', value:'Invocation'},
 	{name:'Kaladesh Inventions', value:'Invention'},
 	{name:'BFZ Expeditions (2015)', value:'ExpeditionBFZ-1'},
 	{name:'Addons', value:'disabled'},
